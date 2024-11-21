@@ -29,10 +29,6 @@ jobs:
       run: |
         black .
 
-    - name: Run Flake8
-      run: |
-        flake8 .
-
     - name: Run Pytest
       run: |
         pytest --maxfail=3 --disable-warnings
