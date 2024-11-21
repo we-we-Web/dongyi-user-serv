@@ -42,5 +42,5 @@ def auth_google_callback(token: Token):
         response_data = response.json()
         id_token = response_data.get("id_token")
         return {"id_token": id_token}
-    except Exception as _:
-        raise HTTPException(status_code=400, detail="Failed to authenticate")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to authenticate: {e}")
