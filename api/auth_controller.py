@@ -1,14 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 from usecases.auth_usecase import GoogleAuthUseCase
 from repository.auth_repository import GoogleAuthRepository
+from domain.models import OAuthToken
 
 router = APIRouter()
 google_auth_repo = GoogleAuthRepository()
 google_auth_usecase = GoogleAuthUseCase(google_auth_repo)
 
-class OAuthToken(BaseModel):
-    code: str
 
 @router.get("/login")
 def auth_google():

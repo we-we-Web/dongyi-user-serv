@@ -1,6 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.auth_router import router as auth_router
+from api.auth_controller import router as auth_router
+from api.account_controller import router as account_router
+from infrastructure.database import init_db
+
+if __name__ == "__main__":
+    init_db()
+    print("資料表已成功初始化")
 
 app = FastAPI()
 
@@ -18,3 +24,4 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix="/auth",  tags=["Auth"])
+app.include_router(account_router, prefix='/account', tags=["Account"])
