@@ -18,3 +18,7 @@ class AccountRepository(ABC):
     @abstractmethod
     def update_name(self, id: str, name: str) -> None:
         pass
+
+    @abstractmethod
+    def delete_account(self, id: str) -> None:
+        pass

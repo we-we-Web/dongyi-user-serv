@@ -54,3 +54,9 @@ class AccountRepositoryImpl(AccountRepository):
         if account:
             account.name = name
             self.db_session.commit()
+
+    def delete_account(self, id):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            self.db_session.delete(account)
+            self.db_session.commit()

@@ -19,3 +19,6 @@ class AccountUseCase:
 
     def update_name(self, id: str, name: str) -> None:
         self.account_repository.update_name(id, name)
+
+    def delete_account(self, id: str) -> None:
+        self.account_repository.delete_account(id)
