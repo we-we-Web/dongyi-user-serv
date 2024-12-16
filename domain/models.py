@@ -16,7 +16,7 @@ class Account(Base):
     id = Column(String(255), primary_key=True, unique=True, autoincrement=False)
     name = Column(String(255), nullable=True)
     cart = Column(String(255), nullable=True)
-    orders = Column(JSON, nullable=False)
+    orders = Column(JSON, nullable=False, default=list)
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
 

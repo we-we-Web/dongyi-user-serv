@@ -53,5 +53,6 @@ class AccountRepositoryImpl(AccountRepository):
     def add_order(self, id: str, order_id: str) -> None:
         account = self.db_session.query(Account).filter_by(id=id).first()
         if account:
-            account.orders.append(order_id)
+            account.orders = account.orders + [order_id]
             self.db_session.commit()
+            print(account.orders)
