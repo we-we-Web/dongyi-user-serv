@@ -50,3 +50,13 @@ def update_name(request: UpdateNameRequest, db=Depends(get_db)):
         return {"message": f"the name updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.delete("/account-delete")
+def delete_account(request: GetAccountRequest, db=Depends(get_db)):
+    try:
+        account_repository = AccountRepositoryImpl(db)
+        account_usecase = AccountUseCase(account_repository)
+        account_usecase.delete_account(request.id)
+        return {"message": f"the account {request.id} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
