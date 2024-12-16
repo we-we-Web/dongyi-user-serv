@@ -12,9 +12,5 @@ class AccountRepository(ABC):
         pass
 
     @abstractmethod
-    def update_cart(self, id: str, cart: str) -> None:
-        pass
-
-    @abstractmethod
     def add_order(self, id: str, order_id: str) -> None:
         pass

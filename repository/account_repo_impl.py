@@ -16,7 +16,6 @@ class AccountRepositoryImpl(AccountRepository):
             return AccountEntity(
                 id=account.id,
                 name=account.name,
-                cart=account.cart,
                 orders=account.orders,
                 created_at=str(account.created_at),
                 updated_at=str(account.updated_at)
@@ -27,7 +26,6 @@ class AccountRepositoryImpl(AccountRepository):
         new_account = Account(
             id=account.id,
             name=account.name,
-            cart=account.cart,
             orders=account.orders if account.orders else [],
             created_at=datetime.now(timezone.utc),
             updated_at=datetime.now(timezone.utc),
@@ -38,17 +36,11 @@ class AccountRepositoryImpl(AccountRepository):
         return AccountEntity(
             id=new_account.id,
             name=new_account.name,
-            cart=new_account.cart,
             orders=new_account.orders,
             created_at=str(new_account.created_at),
             updated_at=str(new_account.updated_at)
         )
 
-    def update_cart(self, id: str, cart: str) -> None:
-        account = self.db_session.query(Account).filter_by(id=id).first()
-        if account:
-            account.cart = cart
-            self.db_session.commit()
 
     def add_order(self, id: str, order_id: str) -> None:
         account = self.db_session.query(Account).filter_by(id=id).first()
