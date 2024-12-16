@@ -1,6 +1,9 @@
 import os
 import requests
 from typing import Optional
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
 
 class GoogleAuthRepository:
     def __init__(self):
