@@ -48,3 +48,9 @@ class AccountRepositoryImpl(AccountRepository):
             account.orders = account.orders + [order_id]
             self.db_session.commit()
             print(account.orders)
+
+    def update_name(self, id, name):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            account.name = name
+            self.db_session.commit()
