@@ -19,6 +19,7 @@ class Account(Base):
     orders = Column(JSON, nullable=False, default=list)
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+    liked = Column(JSON, nullable=False, default=list)
 
     def __repr__(self):
-        return f"<Account(id={self.id}, name={self.name}, cart={self.cart}, orders={self.orders})>)>"
+        return f"<Account(id={self.id}, name={self.name}, cart={self.cart}, orders={self.orders}, liked={self.liked})>"

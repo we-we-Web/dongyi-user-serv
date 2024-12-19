@@ -3,7 +3,7 @@ from usecases.account_usecase import AccountUseCase
 from repository.account_repo_impl import AccountRepositoryImpl
 from infrastructure.database import get_db
 from domain.account_entity import AccountEntity
-from api.dto.account_request import GetAccountRequest, AddOrderRequest, UpdateNameRequest
+from api.dto.account_request import GetAccountRequest, AddOrderRequest, UpdateNameRequest, UpdateLiked
 
 router = APIRouter()
 
@@ -58,5 +58,15 @@ def delete_account(request: GetAccountRequest, db=Depends(get_db)):
         account_usecase = AccountUseCase(account_repository)
         account_usecase.delete_account(request.id)
         return {"message": f"the account {request.id} deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.patch("/liked-update")
+def update_liked(request: UpdateLiked, db=Depends(get_db)):
+    try:
+        account_repository = AccountRepositoryImpl(db)
+        account_usecase = AccountUseCase(account_repository)
+        account_usecase.update_liked(request.id, request.liked)
+        return {"message": f"the liked updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

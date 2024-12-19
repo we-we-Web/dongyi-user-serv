@@ -7,3 +7,4 @@ class AccountEntity(BaseModel):
     orders: Optional[List[str]] = []
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
+    liked: Optional[List[int]] = []

@@ -10,3 +10,7 @@ class AddOrderRequest(BaseModel):
 class UpdateNameRequest(BaseModel):
     id: str
     name: str
+
+class UpdateLiked(BaseModel):
+    id: str
+    liked: int
