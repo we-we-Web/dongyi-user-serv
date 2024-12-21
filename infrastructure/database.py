@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-db_uri = os.getenv("DB_URI")
+db_uri = os.getenv("db_uri")
 DATABASE_URL = f"mysql+pymysql://{db_uri}"
 
 engine = create_engine(DATABASE_URL)

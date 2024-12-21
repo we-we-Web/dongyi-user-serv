@@ -22,3 +22,7 @@ class AccountRepository(ABC):
     @abstractmethod
     def delete_account(self, id: str) -> None:
         pass
+
+    @abstractmethod
+    def update_liked(self, id: str, liked_id: int) -> None:
+        pass

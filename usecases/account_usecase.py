@@ -22,3 +22,6 @@ class AccountUseCase:
 
     def delete_account(self, id: str) -> None:
         self.account_repository.delete_account(id)
+
+    def update_liked(self, id: str, liked_id: int) -> None:
+        self.account_repository.update_liked(id, liked_id)
