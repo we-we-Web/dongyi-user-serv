@@ -16,3 +16,12 @@ class AccountUseCase:
 
     def add_order(self, id: str, order_id: str) -> None:
         self.account_repository.add_order(id, order_id)
+
+    def update_name(self, id: str, name: str) -> None:
+        self.account_repository.update_name(id, name)
+
+    def delete_account(self, id: str) -> None:
+        self.account_repository.delete_account(id)
+
+    def update_liked(self, id: str, liked_id: int) -> None:
+        self.account_repository.update_liked(id, liked_id)

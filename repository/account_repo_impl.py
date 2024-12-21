@@ -48,3 +48,25 @@ class AccountRepositoryImpl(AccountRepository):
             account.orders = account.orders + [order_id]
             self.db_session.commit()
             print(account.orders)
+
+    def update_name(self, id, name):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            account.name = name
+            self.db_session.commit()
+
+    def delete_account(self, id):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            self.db_session.delete(account)
+            self.db_session.commit()
+
+    def update_liked(self, id, liked_id):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            if liked_id not in account.liked:
+                account.liked = account.liked + [liked_id]
+                self.db_session.commit()
+            elif liked_id in account.liked:
+                account.liked = [id for id in account.liked if id != liked_id]
+                self.db_session.commit()

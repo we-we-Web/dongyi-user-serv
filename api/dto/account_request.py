@@ -6,3 +6,11 @@ class GetAccountRequest(BaseModel):
 class AddOrderRequest(BaseModel):
     id: str
     order: str
+
+class UpdateNameRequest(BaseModel):
+    id: str
+    name: str
+
+class UpdateLiked(BaseModel):
+    id: str
+    liked: int

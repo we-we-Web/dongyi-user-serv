@@ -14,3 +14,15 @@ class AccountRepository(ABC):
     @abstractmethod
     def add_order(self, id: str, order_id: str) -> None:
         pass
+
+    @abstractmethod
+    def update_name(self, id: str, name: str) -> None:
+        pass
+
+    @abstractmethod
+    def delete_account(self, id: str) -> None:
+        pass
+
+    @abstractmethod
+    def update_liked(self, id: str, liked_id: int) -> None:
+        pass
