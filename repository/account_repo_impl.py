@@ -4,6 +4,10 @@ from domain.account_entity import AccountEntity
 from repository.account_repository import AccountRepository
 from domain.models import Account
 from datetime import datetime, timezone
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class AccountRepositoryImpl(AccountRepository):
@@ -70,3 +74,8 @@ class AccountRepositoryImpl(AccountRepository):
             elif liked_id in account.liked:
                 account.liked = [id for id in account.liked if id != liked_id]
                 self.db_session.commit()
+
+    def is_admin(self, id):
+        if id == os.getenv("admin_email1") or id == os.getenv("admin_email2"):
+            return True
+        return False
