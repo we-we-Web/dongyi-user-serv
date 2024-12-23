@@ -70,3 +70,13 @@ def update_liked(request: UpdateLiked, db=Depends(get_db)):
         return {"message": f"the liked updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/isAdmin/{id}")
+def is_admin(id: str, db=Depends(get_db)):
+    try:
+        account_repository = AccountRepositoryImpl(db)
+        account_usecase = AccountUseCase(account_repository)
+        is_admin = account_usecase.is_admin(id)
+        return is_admin
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
