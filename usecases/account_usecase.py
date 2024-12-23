@@ -25,3 +25,6 @@ class AccountUseCase:
 
     def update_liked(self, id: str, liked_id: int) -> None:
         self.account_repository.update_liked(id, liked_id)
+
+    def is_admin(self, id: str) -> bool:
+        return(self.account_repository.is_admin(id))

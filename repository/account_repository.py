@@ -26,3 +26,7 @@ class AccountRepository(ABC):
     @abstractmethod
     def update_liked(self, id: str, liked_id: int) -> None:
         pass
+
+    @abstractmethod
+    def is_admin(self, id: str) -> bool:
+        pass
