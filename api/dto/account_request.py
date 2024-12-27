@@ -14,3 +14,6 @@ class UpdateNameRequest(BaseModel):
 class UpdateLiked(BaseModel):
     id: str
     liked: int
+
+class OTPCode(BaseModel):
+    OTP: str

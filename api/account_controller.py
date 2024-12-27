@@ -3,7 +3,7 @@ from usecases.account_usecase import AccountUseCase
 from repository.account_repo_impl import AccountRepositoryImpl
 from infrastructure.database import get_db
 from domain.account_entity import AccountEntity
-from api.dto.account_request import GetAccountRequest, AddOrderRequest, UpdateNameRequest, UpdateLiked
+from api.dto.account_request import GetAccountRequest, AddOrderRequest, UpdateNameRequest, UpdateLiked, OTPCode
 
 router = APIRouter()
 
@@ -22,11 +22,11 @@ def get_account(request: GetAccountRequest, db=Depends(get_db)):
         raise HTTPException(status_code=404, detail=str(e))
 
 @router.post("/account-create")
-def create_account(account: AccountEntity, db=Depends(get_db)):
+def create_account(otpCode: OTPCode, db=Depends(get_db)):
     try:
         account_repository = AccountRepositoryImpl(db)
         account_usecase = AccountUseCase(account_repository)
-        new_account = account_usecase.create_account(account)
+        new_account = account_usecase.create_account(otpCode.OTP)
         return {"account": new_account.model_dump()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -82,11 +82,11 @@ def is_admin(id: str, db=Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/otp-send")
-async def send_otp(request: GetAccountRequest, db=Depends(get_db)):
+async def send_otp(request: AccountEntity, db=Depends(get_db)):
     try:
         account = AccountRepositoryImpl(db)
         account_usecase = AccountUseCase(account)
-        status = await account_usecase.send_otp(request.id)
+        status = await account_usecase.send_otp(request)
         return {"message": f"{status}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

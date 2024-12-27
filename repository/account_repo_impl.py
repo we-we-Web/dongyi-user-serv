@@ -30,24 +30,30 @@ class AccountRepositoryImpl(AccountRepository):
             )
         return None
 
-    def create_account(self, account: AccountEntity) -> AccountEntity:
-        new_account = Account(
-            id=account.id,
-            name=account.name,
-            orders=account.orders if account.orders else [],
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
-        )
-        self.db_session.add(new_account)
-        self.db_session.commit()
-        self.db_session.refresh(new_account)
-        return AccountEntity(
-            id=new_account.id,
-            name=new_account.name,
-            orders=new_account.orders,
-            created_at=str(new_account.created_at),
-            updated_at=str(new_account.updated_at)
-        )
+    def create_account(self, otp: str) -> AccountEntity:
+        account = collection.find_one({"otp": otp})
+        if account:
+            collection.delete_one({"otp": otp})
+            new_account = Account(
+                id=account["email"],
+                name=account["name"],
+                orders=account["orders"] if account["orders"] else [],
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc),
+                liked=account["liked"] if account["liked"] else [],
+            )
+            self.db_session.add(new_account)
+            self.db_session.commit()
+            self.db_session.refresh(new_account)
+            return AccountEntity(
+                id=new_account.id,
+                name=new_account.name,
+                orders=new_account.orders,
+                created_at=str(new_account.created_at),
+                updated_at=str(new_account.updated_at),
+                liked=new_account.liked
+            )
+        return None
 
 
     def add_order(self, id: str, order_id: str) -> None:
@@ -84,31 +90,38 @@ class AccountRepositoryImpl(AccountRepository):
             return True
         return False
     
-    async def send_otp(self, id):
-        otp = pyotp.TOTP(pyotp.random_base32()).now()
-        collection.update_one(
-            {"email": id},
-            {
-                "$set": {
-                    "otp": otp,
-                    "timestamp": time.time(),
-                }
-            },
-            upsert=True,
-        )
-
+    async def send_otp(self, account: AccountEntity):
         try:
+            otp = pyotp.TOTP(pyotp.random_base32()).now()
             message = f"Subject: OTP\n\nYour OTP is {otp}. It will expire in 5 minutes."
             await aiosmtplib.send(
                 message,
                 sender=os.getenv("email"),
-                recipients=[id],
+                recipients=[account.id],
                 hostname=os.getenv("smtp_server"),
                 port=os.getenv("smtp_port"),
                 username=os.getenv("email"),
                 password=os.getenv("email_password"),
                 use_tls=True,
             )
+            collection.update_one(
+                {
+                    "email": account.id,
+                    "name": account.name,
+                    "orders": account.orders,
+                    "created_at": account.created_at,
+                    "updated_at": account.updated_at,
+                    "liked": account.liked,
+                },
+                {
+                    "$set": {
+                        "otp": otp,
+                        "timestamp": datetime.now(timezone.utc),
+                    }
+                },
+                upsert=True,
+            )
+            
             return "success"
         except Exception as e:
             return str(e)

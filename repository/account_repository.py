@@ -8,7 +8,7 @@ class AccountRepository(ABC):
         pass
 
     @abstractmethod
-    def create_account(self, account: AccountEntity) -> AccountEntity:
+    def create_account(self, otp: str) -> AccountEntity:
         pass
 
     @abstractmethod
