@@ -11,7 +11,7 @@ class AccountUseCase:
             raise ValueError("Account not found")
         return account
 
-    def create_account(self, otp: str) -> AccountEntity:
+    def create_account(self, otp: str) -> str:
         return self.account_repository.create_account(otp)
 
     def add_order(self, id: str, order_id: str) -> None:

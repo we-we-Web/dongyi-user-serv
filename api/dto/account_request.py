@@ -17,3 +17,7 @@ class UpdateLiked(BaseModel):
 
 class OTPCode(BaseModel):
     OTP: str
+
+class CreateAccountRequest(BaseModel):
+    OTP: str
+    email: str
