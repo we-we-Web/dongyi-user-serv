@@ -28,3 +28,6 @@ class AccountUseCase:
 
     def is_admin(self, id: str) -> bool:
         return(self.account_repository.is_admin(id))
+    
+    def send_otp(self, id: str) -> str:
+        return(self.account_repository.send_otp(id))

@@ -30,3 +30,7 @@ class AccountRepository(ABC):
     @abstractmethod
     def is_admin(self, id: str) -> bool:
         pass
+
+    @abstractmethod
+    async def send_otp(self, id: str) -> str:
+        pass

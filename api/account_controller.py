@@ -80,3 +80,13 @@ def is_admin(id: str, db=Depends(get_db)):
         return is_admin
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post("/otp-send")
+async def send_otp(request: GetAccountRequest, db=Depends(get_db)):
+    try:
+        account = AccountRepositoryImpl(db)
+        account_usecase = AccountUseCase(account)
+        status = await account_usecase.send_otp(request.id)
+        return {"message": f"{status}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
