@@ -8,7 +8,7 @@ class AccountRepository(ABC):
         pass
 
     @abstractmethod
-    def create_account(self, account: AccountEntity) -> AccountEntity:
+    def create_account(self, otp: str) -> AccountEntity:
         pass
 
     @abstractmethod
@@ -29,4 +29,8 @@ class AccountRepository(ABC):
 
     @abstractmethod
     def is_admin(self, id: str) -> bool:
+        pass
+
+    @abstractmethod
+    async def send_otp(self, id: str) -> str:
         pass
