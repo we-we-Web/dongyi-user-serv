@@ -4,8 +4,13 @@ from domain.account_entity import AccountEntity
 from repository.account_repository import AccountRepository
 from domain.models import Account
 from datetime import datetime, timezone
+from infrastructure.mongoDB import collection
+from api.dto.account_request import UpdateNameRequest, CreateAccountRequest
+import aiosmtplib
 import os
 from dotenv import load_dotenv
+import pyotp
+import time
 
 load_dotenv()
 
@@ -26,24 +31,25 @@ class AccountRepositoryImpl(AccountRepository):
             )
         return None
 
-    def create_account(self, account: AccountEntity) -> AccountEntity:
-        new_account = Account(
-            id=account.id,
-            name=account.name,
-            orders=account.orders if account.orders else [],
-            created_at=datetime.now(timezone.utc),
-            updated_at=datetime.now(timezone.utc),
-        )
-        self.db_session.add(new_account)
-        self.db_session.commit()
-        self.db_session.refresh(new_account)
-        return AccountEntity(
-            id=new_account.id,
-            name=new_account.name,
-            orders=new_account.orders,
-            created_at=str(new_account.created_at),
-            updated_at=str(new_account.updated_at)
-        )
+    def create_account(self, info: CreateAccountRequest) -> str:
+        account = collection.find_one({"otp": info.OTP})
+        if account["email"] == info.email:
+            collection.delete_one({"otp": info.OTP})
+            new_account = Account(
+                id=account["email"],
+                name=account["name"],
+                orders=[],
+                created_at=datetime.now(timezone.utc),
+                updated_at=datetime.now(timezone.utc),
+                liked=[],
+            )
+            self.db_session.add(new_account)
+            self.db_session.commit()
+            self.db_session.refresh(new_account)
+            return f"Account {new_account.id} created successfully"
+        else:
+            return "Account creation failed"
+        
 
 
     def add_order(self, id: str, order_id: str) -> None:
@@ -79,3 +85,36 @@ class AccountRepositoryImpl(AccountRepository):
         if id == os.getenv("admin_email1") or id == os.getenv("admin_email2"):
             return True
         return False
+    
+    async def send_otp(self, account: UpdateNameRequest):
+        try:
+            otp = pyotp.TOTP(pyotp.random_base32()).now()
+            message = f"Subject: OTP\n\nYour OTP is {otp}. It will expire in 5 minutes."
+            await aiosmtplib.send(
+                message,
+                sender=os.getenv("email"),
+                recipients=[account.id],
+                hostname=os.getenv("smtp_server"),
+                port=os.getenv("smtp_port"),
+                username=os.getenv("email"),
+                password=os.getenv("email_password"),
+                use_tls=True,
+            )
+            collection.update_one(
+                {
+                    "email": account.id,
+                    "name": account.name,
+                },
+                {
+                    "$set": {
+                        "otp": otp,
+                        "timestamp": datetime.now(timezone.utc),
+                    }
+                },
+                upsert=True,
+            )
+            
+            return "success"
+        except Exception as e:
+            return str(e)
+
