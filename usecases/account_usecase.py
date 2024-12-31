@@ -31,3 +31,6 @@ class AccountUseCase:
     
     def send_otp(self, id: str) -> str:
         return(self.account_repository.send_otp(id))
+    
+    def get_favorites(self, id: str) -> list:
+        return(self.account_repository.get_favorites(id))
