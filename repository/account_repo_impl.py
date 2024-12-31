@@ -117,4 +117,10 @@ class AccountRepositoryImpl(AccountRepository):
             return "success"
         except Exception as e:
             return str(e)
+        
+    def get_favorites(self, id):
+        account = self.db_session.query(Account).filter_by(id=id).first()
+        if account:
+            return account.liked
+        raise ValueError("Account not found")
 

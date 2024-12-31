@@ -34,3 +34,7 @@ class AccountRepository(ABC):
     @abstractmethod
     async def send_otp(self, id: str) -> str:
         pass
+
+    @abstractmethod
+    def get_favorites(self, id: str) -> list:
+        pass
