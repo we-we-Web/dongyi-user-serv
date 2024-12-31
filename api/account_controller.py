@@ -90,3 +90,13 @@ async def send_otp(request: UpdateNameRequest, db=Depends(get_db)):
         return {"message": f"{status}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/get-favorites/{id}")
+def get_favorites(id: str, db=Depends(get_db)):
+    try:
+        account_repository = AccountRepositoryImpl(db)
+        account_usecase = AccountUseCase(account_repository)
+        favorites = account_usecase.get_favorites(id)
+        return {f"{id} favorites": favorites}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
